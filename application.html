@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<style>
+.pt-3-half {
+padding-top: 1.4rem;
+}
+
+.modal-content{
+background-color: grey !important;
+margin-top: 150px !important;
+}
+#myInput {
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+</style>
+<!-- Editable table -->
+<script src='https://kit.fontawesome.com/a076d05399.js'></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+<div class="modal" id="myModal" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Modal Header</h4>
+        </div>
+        <div class="modal-body">
+          Name:<br>
+          <input type="text" id="name">
+          <br>
+          Roll Number:<br>
+          <input type="text" id="roll_number">
+          <br>
+          Age:<br>
+          <input type="text" id="age">
+          <br>
+          Gender:<br>
+          <input type="text" id="gender">
+          <br>
+          <button type="button" class="float-right mb-3 mr-2" id="submit_button" onclick="add_student()">Submit</button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+<div class="card">
+  <h3 class="card-header text-center font-weight-bold text-uppercase py-4">Student Record</h3>
+  <div class="card-body">
+    <div id="table" class="table-editable">
+      <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+      <span class="float-right mb-3 mr-2"><a href="#!" class="text-success"><i
+            class="fas fa-plus fa-2x" id="plus" aria-hidden="true" data-toggle="modal" data-target="#myModal"></i></a></span>
+      <table class="table table-bordered table-responsive-md table-striped text-center" id="student_table">
+        <thead>
+          <tr>
+            <th class="text-center">Name</th>
+            <th class="text-center">Roll Number</th>
+            <th class="text-center">Age</th>
+            <th class="text-center">Gender</th>
+            <th class="text-center">Remove</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="pt-3-half" contenteditable="true">Reva Gupta</td>
+            <td class="pt-3-half" contenteditable="true">31</td>
+            <td class="pt-3-half" contenteditable="true">12</td>
+            <td class="pt-3-half" contenteditable="true">F</td>
+            <td>
+              <span class="table-remove"><button type="button"
+                  class="btn btn-danger btn-rounded btn-sm my-0">Remove</button></span>
+            </td>
+          </tr>
+          <tr>
+            <td class="pt-3-half" contenteditable="true">Lanya Mittal</td>
+            <td class="pt-3-half" contenteditable="true">10</td>
+            <td class="pt-3-half" contenteditable="true">9</td>
+            <td class="pt-3-half" contenteditable="true">F</td>
+            <td>
+              <span class="table-remove"><button type="button"
+                  class="btn btn-danger btn-rounded btn-sm my-0">Remove</button></span>
+            </td>
+          </tr>
+
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<script>
+const $tableID = $('#table');
+ const $BTN = $('#export-btn');
+ const $EXPORT = $('#export');
+
+ function myFunction() {
+   var input, filter, table, tr, td, i, txtValue;
+   input = document.getElementById("myInput");
+   filter = input.value.toUpperCase();
+   table = document.getElementById("table");
+   tr = table.getElementsByTagName("tr");
+   for (i = 0; i < tr.length; i++) {
+     td = tr[i].getElementsByTagName("td")[0];
+     if (td) {
+       txtValue = td.textContent || td.innerText;
+       if (txtValue.toUpperCase().indexOf(filter) > -1) {
+         tr[i].style.display = "";
+       } else {
+         tr[i].style.display = "none";
+       }
+     }
+   }
+ }
+
+
+function add_student(){
+   var name = document.getElementById('name').value;
+   var roll_number = document.getElementById('roll_number').value;
+   var age = document.getElementById('age').value;
+   var gender =  document.getElementById('gender').value;
+   var newTr = '<tr><td class="pt-3-half" contenteditable="true">'
+         newTr += name
+         newTr += '</td><td class="pt-3-half" contenteditable="true">'
+         newTr += roll_number
+         newTr += '</td><td class="pt-3-half" contenteditable="true">'
+         newTr += age
+         newTr += '</td><td class="pt-3-half" contenteditable="true">'
+         newTr += gender
+         newTr += '</td><td><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 waves-effect waves-light">Remove</button></span></td></tr>';
+   if ($tableID.find('tbody tr').length != 0) {
+     $(table).find('tbody').append( newTr )
+   }
+ };
+
+ $tableID.on('click', '.table-remove', function () {
+
+   $(this).parents('tr').detach();
+ });
+
+ $
+ // A few jQuery helpers for exporting only
+ jQuery.fn.pop = [].pop;
+ jQuery.fn.shift = [].shift;
+
+ $BTN.on('click', () => {
+
+   const $rows = $tableID.find('tr:not(:hidden)');
+   const headers = [];
+   const data = [];
+
+   // Get the headers (add special header logic here)
+   $($rows.shift()).find('th:not(:empty)').each(function () {
+
+     headers.push($(this).text().toLowerCase());
+   });
+
+   // Turn all existing rows into a loopable array
+   $rows.each(function () {
+     const $td = $(this).find('td');
+     const h = {};
+
+     // Use the headers from earlier to name our hash keys
+     headers.forEach((header, i) => {
+
+       h[header] = $td.eq(i).text();
+     });
+
+     data.push(h);
+   });
+
+   // Output the result
+   $EXPORT.text(JSON.stringify(data));
+ });
+</script>
+<!-- Editable table -->
+</html>
